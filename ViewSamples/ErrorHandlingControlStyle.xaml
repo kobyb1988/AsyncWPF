@@ -1,0 +1,36 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:customCtrls="clr-namespace:Neolant.ASRM.RCPManager.Styles.CodeBehind">
+    <!--  Стиль для показа ошибки при работе с сервисом.  -->
+    <Style x:Key="ErrorHandlingControlStyle" TargetType="{x:Type customCtrls:ErrorHandlingControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                        <Border Background="{DynamicResource MiddleGrayColorColorBrush}"
+                                        BorderBrush="Red"
+                                        BorderThickness="2"
+                                        CornerRadius="4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Foreground="White"
+                                                   Style="{DynamicResource Red16TextStyle}"
+                                                   Text="Ошибка при получении данных" />
+                                <Button Margin="10,0,10,0"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type customCtrls:ErrorHandlingControl}},
+                                                                  Path=Command}"
+                                                Style="{DynamicResource TransparentButtonStyle}"
+                                                ToolTip="Обновить страницу">
+                                    <Path Width="13"
+                                                  Height="15"
+                                                  Style="{DynamicResource RefreshPathStyle}" />
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--  Стиль для показа ошибки при работе с сервисом.  -->
+</ResourceDictionary>

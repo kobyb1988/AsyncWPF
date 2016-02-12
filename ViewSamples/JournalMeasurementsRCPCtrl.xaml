@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="Neolant.ASRM.RCPManager.View.Controls.BodyCtrls.JournalMeasurementsRCPCtrls.JournalMeasurementsRCPCtrl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:codeBehind="clr-namespace:Neolant.ASRM.RCPManager.Styles.CodeBehind;assembly=Neolant.ASRM.RCPManager.Styles"
+             xmlns:converters="clr-namespace:Neolant.ASRM.RCPManager.ViewModel.Infrastructure.Converters;assembly=Neolant.ASRM.RCPManager.ViewModel"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:journalMeasurementsRcpCtrls="clr-namespace:Neolant.ASRM.RCPManager.View.Controls.BodyCtrls.JournalMeasurementsRCPCtrls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:commonCtrls="clr-namespace:Neolant.ASRM.RCPManager.View.MainWindowsControls.BodyCtrls.CommonCtrls"
+             xmlns:journalMeasurementsRcpViewModels="clr-namespace:Neolant.ASRM.RCPManager.ViewModel.ViewModels.BodyViewModels.JournalMeasurementsRCPViewModels;assembly=Neolant.ASRM.RCPManager.ViewModel"
+             xmlns:busyIndicator="clr-namespace:Neolant.ASRM.RCPManager.Styles.Styles.TelerikStyles.BusyIndicator;assembly=Neolant.ASRM.RCPManager.Styles"
+             d:DesignHeight="300"
+             d:DesignWidth="500"
+             mc:Ignorable="d" d:DataContext="{x:Type journalMeasurementsRcpViewModels:JournalMeasurementsRCPViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Telerik.Windows.Themes.Windows8;component/Themes/System.Windows.xaml" />
+                <ResourceDictionary Source="/Telerik.Windows.Themes.Windows8;component/Themes/Telerik.Windows.Controls.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+
+            <Style x:Key="SelectedTreeBeatDependencyVisibleTxtBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Orange22TextStyle}" >
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding BuildingTreeVM.SelectedTreeBeat,Converter={converters:NullToBoolConverter}}" Value="True" >
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding BuildingTreeVM.SelectedTreeBeat,Converter={converters:NullToBoolConverter}}" Value="False">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="SelectedTreeBeatDependencyVisibleGrid" TargetType="{x:Type Grid}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding BuildingTreeVM.SelectedTreeBeat,Converter={converters:NullToBoolConverter}}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding BuildingTreeVM.SelectedTreeBeat,Converter={converters:NullToBoolConverter}}" Value="True">
+                        <Setter Property="Visibility" Value="Visible"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <busyIndicator:BusyDecorator x:Name="BusyIndicator">
+            <busyIndicator:BusyDecorator.IsBusyIndicatorShowing>
+                <MultiBinding Converter="{converters:ThreeParamsToBoolConverter}">
+                    <Binding Path="BuildingTreeVM.BuildingLoadingAsyncResult.IsNotCompleted" />
+                    <Binding Path="SaveMeasurmentAsyncWraper.IsNotCompleted" />
+                    <Binding Path="ExportGridToExcelWrapper.ExportIsNotComplete" />
+                </MultiBinding>
+            </busyIndicator:BusyDecorator.IsBusyIndicatorShowing>
+            <busyIndicator:BusyDecorator.IsEnabled>
+                <MultiBinding Converter="{converters:ThreeParamsToBoolConverter}">
+                    <Binding Path="BuildingTreeVM.BuildingLoadingAsyncResult.IsFaulted" Converter="{converters:BoolInvertConverter}"/>
+                    <Binding Path="SaveMeasurmentAsyncWraper.IsFaulted" Converter="{converters:BoolInvertConverter}"/>
+                    <Binding Path="ExportGridToExcelWrapper.ExportIsNotComplete" Converter="{converters:BoolInvertConverter}" />
+                    <Binding RelativeSource="{RelativeSource Self}" Path="IsBusyIndicatorShowing"/>
+                </MultiBinding>
+            </busyIndicator:BusyDecorator.IsEnabled>
+
+
+            <Grid x:Name="MainJournalMeasurementsRCPFinderKey">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <journalMeasurementsRcpCtrls:ToolBarCtrl Grid.Row="0"
+                                                         Margin="5"
+                                                         VerticalAlignment="Center"/>
+                <Border Grid.Row="1"
+                        BorderBrush="{StaticResource AccentColorBrush}"
+                        BorderThickness="1" />
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="250" MaxWidth="900"/>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <commonCtrls:TreeCtrl Grid.Column="0" HorizontalAlignment="Stretch" />
+                    <GridSplitter Grid.Column="1"
+                                  Width="2"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Stretch"
+                                  Background="{StaticResource AccentColorBrush}" />
+                    <Grid Grid.Column="2">
+
+                        <Grid Style="{StaticResource SelectedTreeBeatDependencyVisibleGrid}" d:DataContext="{x:Type journalMeasurementsRcpViewModels:JournalMeasurementsRCPViewModel}">
+
+                            <journalMeasurementsRcpCtrls:MeasurementsCtrl DataContext="{Binding BuildingTreeVM.SelectedTreeBeat.BeatDetailsVM}"/>
+
+                            <codeBehind:ErrorHandlingControl Command="{Binding RefreshSelectedTreeBeatCmd}"
+                                                          Style="{StaticResource ErrorHandlingControlStyle}"
+                                                          Visibility="{Binding BuildingTreeVM.SelectedTreeBeat.BeatDetailsVM.MeasurementLoadingAsyncResult.IsFaulted,
+                                                                               Converter={codeBehind:BoolToVisibilityConverter},
+                                                                               FallbackValue={x:Static Visibility.Collapsed},
+                                                                               TargetNullValue={x:Static Visibility.Collapsed}}" />
+                        </Grid>
+                        <TextBlock Text="Выберите помещение" HorizontalAlignment="Center" VerticalAlignment="Center"  Style="{StaticResource SelectedTreeBeatDependencyVisibleTxtBlock}"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+        </busyIndicator:BusyDecorator>
+
+        <codeBehind:ErrorHandlingControl Command="{Binding RefreshCmd}"
+                                          Style="{StaticResource ErrorHandlingControlStyle}"
+                                          Visibility="{Binding BuildingTreeVM.BuildingLoadingAsyncResult.IsFaulted,
+                                                               FallbackValue={x:Static Visibility.Collapsed},
+                                                               TargetNullValue={x:Static Visibility.Collapsed},
+                                                               Converter={codeBehind:BoolToVisibilityConverter}}" />
+        <codeBehind:ErrorHandlingControl Command="{Binding SaveCmd}"
+                                          Style="{StaticResource ErrorHandlingControlStyle}"
+                                          Visibility="{Binding SaveMeasurmentAsyncWraper.IsFaulted,
+                                                               FallbackValue={x:Static Visibility.Collapsed},
+                                                               TargetNullValue={x:Static Visibility.Collapsed},
+                                                               Converter={codeBehind:BoolToVisibilityConverter}}" />
+    </Grid>
+</UserControl>
